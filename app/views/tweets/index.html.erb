@@ -1,0 +1,91 @@
+<%= gmaps(map_options: {
+	libraries: [:visualization, :common, :map, :util, :marker, :overlay],
+	detect_location: true,
+    center_on_user: true,
+    zoom: 8,
+    auto_adjust: true,
+    auto_zoom: false,
+    raw: "{styles: mapStyle}"
+	} )  %>
+
+<div class="people"></div>	
+<% content_for :scripts do %>
+	
+	<script type="text/javascript">
+		var mapStyle = [
+		  {
+		    "stylers": [
+		      { "hue": "#006eff" },
+		      { "saturation": -48 }
+		    ]
+		  }
+		]
+
+		locations=[];
+		var pointArrayDates = [];
+		var peopleArrayDates = [];
+		var pointArray = new google.maps.MVCArray(locations);
+		var peopleArray = new google.maps.MVCArray(locations);
+	  	heatmap = new google.maps.visualization.HeatmapLayer({
+	    	data: pointArray,
+	    	radius: 50,
+	    	opacity: 0.4
+
+	  	});
+
+	  	var dispatcher = new WebSocketRails('localhost/websocket');
+		function addToMap(data) {
+			pointArray.push({location: new google.maps.LatLng(data.lat, data.lng), weight: data.weight});
+			
+			$(".people").append('<div class="person-box" id="'+data.uid+'"><div style="cursor: pointer;" class="person-link" data-lat="'+data.lat+'" data-lng="'+data.lng+'" data-uid="'+data.uid+'"><img src="'+data.profile_image+'"></div></div>');
+			pointArrayDates.push({created_at: data.created_at, div_id: data.uid});
+			var myDate = new Date(Date.now());
+			var utcNow=Date.parse(myDate.toUTCString());
+			for (var i =0; i < pointArray.length; i++) {	
+				var diff=utcNow - Date.parse(pointArrayDates[i].created_at);
+			   	if (diff > 30000) { //time difference in milisseconds
+			   		$('#'+pointArrayDates[i].div_id).remove();
+			    	pointArray.removeAt(i);
+			    	pointArrayDates.splice(i,1);
+			    	
+				}
+			}
+			
+		}
+
+
+		dispatcher.bind('tweets', addToMap);
+		var area = {};
+		Gmaps.map.callback = function() {				
+	    	heatmap.setMap(Gmaps.map.map);
+	    	google.maps.event.addListener(Gmaps.map.map, 'idle', function () {
+	    		var bounds=Gmaps.map.map.getBounds();
+		    	area={ swlat: bounds.getSouthWest().lat(), 
+	    		swlng: bounds.getSouthWest().lng(), 
+	    		nelat: bounds.getNorthEast().lat(),
+	    		nelng: bounds.getNorthEast().lng() }
+				dispatcher.trigger('tweets', area);
+
+	    	});
+	  	}
+		
+	  		$(document).on({
+	  			click: function(){
+			  		var lat=$(this).data("lat");
+			  		var lng=$(this).data("lng");
+			  		var uid=$(this).data("uid");
+			  		var loc=[{lat: lat, lng: lng}];
+			  		if (Gmaps.map.markers[0]) {
+			  			Gmaps.map.clearMarker(Gmaps.map.markers[0]);	
+			  		}
+			  		Gmaps.map.markers=[];
+			  		Gmaps.map.addMarkers(loc);
+			  	}
+		  		
+		  	}, ".person-link");
+		
+	  	
+	</script>
+
+<% end %>
+

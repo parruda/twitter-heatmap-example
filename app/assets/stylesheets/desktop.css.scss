@@ -1,0 +1,24 @@
+body {
+	padding: 0px;
+	margin: 0px;
+}
+
+
+
+
+.people {
+	overflow-y: auto;
+	float: right;
+	position: relative;
+	width: 210px;
+	height: 400px;
+	background: #fff;
+	.person-box {
+		width: 100%;
+		img {
+			width: 30px;
+			display: block;
+			float: left;
+		}
+	}
+}
