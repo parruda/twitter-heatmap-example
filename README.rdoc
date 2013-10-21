@@ -1,28 +1,15 @@
-== README
+== Twitter Heatmap Example
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+I created this example to learn how to use websockets-rails gem, and thought that it might be useful for somebody out there :)
 
-Things you may want to cover:
+== Intro
 
-* Ruby version
+This example uses the twitter gem to connect to Twitter's Streaming API and filter for all geotagged tweets. Then, I use gmaps4rails to add Google Maps, and websocket-rails to receive real-time data from the stream, while I send data back from the browser.
+The reason why I am using websockets instead of server sent events is because I wanted to be able to only display the tweets that are in the map bounds, but leaving the processing at the server, instead of having javascript to parse what is in or out of the bounds.
+I do that by sending a message (with the new bounds) to the server everytime the map changes, and it filters out the tweets for me.
 
-* System dependencies
+== Usage Instructions
 
-* Configuration
+First, you need to create a twitter app and get all the tokens they give you. Then, add them to scripts/stream.rb, and run "while true; do rails runner scripts/stream.rb ;sleep 10;done" from your app root folder.
 
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
-
-
-Please feel free to use a different markup language if you do not plan to run
-<tt>rake doc:app</tt>.
+Start Thin and visit localhost:3000 :)

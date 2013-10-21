@@ -33,7 +33,7 @@
 
 	  	});
 
-	  	var dispatcher = new WebSocketRails('localhost/websocket');
+	  	var dispatcher = new WebSocketRails('localhost:3000/websocket');
 		function addToMap(data) {
 			pointArray.push({location: new google.maps.LatLng(data.lat, data.lng), weight: data.weight});
 			
