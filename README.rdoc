@@ -13,3 +13,7 @@ I do that by sending a message (with the new bounds) to the server everytime the
 First, you need to create a twitter app and get all the tokens they give you. Then, add them to scripts/stream.rb, and run "while true; do rails runner scripts/stream.rb ;sleep 10;done" from your app root folder.
 
 Start Thin and visit localhost:3000 :)
+
+== Contact
+
+If you have any questions, please feel free to ping me at paulo@parruda.net
