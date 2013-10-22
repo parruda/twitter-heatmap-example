@@ -11,10 +11,14 @@ I do that by sending a message (with the new bounds) to the server everytime the
 == Usage Instructions
 
 1) Create a twitter app and get the tokens
+
 2) Put your tokens on scripts/stream.rb
+
 3) Start Redis
+
 4) while true; do rails runner scripts/stream.rb ;sleep 10;done
-4) Start Thin and visit localhost:3000 :)
+
+5) Start Thin and visit localhost:3000 :)
 
 == Contact
 
