@@ -13,4 +13,6 @@ WebsocketRails::EventMap.describe do
   # The above will handle an event triggered on the client like `product.new`.
   
     subscribe :tweets, 'event#tweets'
+    subscribe :client_disconnected, :to => EventController, :with_method => :kill_thread
+    subscribe :client_connected, :to => EventController, :with_method => :spawn_thread
 end
